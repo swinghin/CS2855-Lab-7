@@ -32,6 +32,7 @@ public class myDBApp {
 		}
 		// Now we're ready to use the DB. You may add your code below this line.
 
+		// Exercise 1: Querying the Database
 		String query = "SELECT * FROM BRANCH;";
 		ResultSet rs = executeQuery(connection, query);
 		try {
@@ -41,6 +42,16 @@ public class myDBApp {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+		// Exercise 2: Creating and Dropping Tables
+		query = "SELECT * FROM customer;";
+		System.out.println("Dropping table customer...");
+		dropTable(connection, "customer;");
+		ResultSet exercise2 = executeQuery(connection, query);
+		System.out.println("Creating table customer...");
+		createTable(connection,
+				"customer (customer_name varchar(15), customer_street varchar(15), customer_city varchar(15), primary key (customer_name));");
+		exercise2 = executeQuery(connection, query);
 
 	}
 
@@ -55,6 +66,29 @@ public class myDBApp {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static void dropTable(Connection connection, String table) {
+		System.out.println("DEBUG: Dropping table...");
+		try {
+			Statement st = connection.createStatement();
+			st.execute("DROP TABLE " + table);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void createTable(Connection connection, String tableDescription) {
+		System.out.println("DEBUG: Creating table...");
+		try {
+			Statement st = connection.createStatement();
+			st.execute("CREATE TABLE " + tableDescription);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	// ADVANCED: This method is for advanced users only. You should not need to
