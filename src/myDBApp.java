@@ -55,6 +55,20 @@ public class myDBApp {
 
 		// Exercise 3: Inserting Values into a Table from a File
 		System.out.println(insertIntoTableFromFile(connection, "customer", "customers.txt"));
+
+		// Exercise 4: Prepared Statements
+		String SQL = "UPDATE account " + "SET balance = balance + ? " + "WHERE branch_name = ?";
+		int affectedRows = 0;
+		try {
+			PreparedStatement pstmt = connection.prepareStatement(SQL);
+			pstmt.setInt(1, 1000);
+			pstmt.setString(2, "Brighton");
+			affectedRows = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("DEBUG: Updated " + affectedRows + " rows.");
+
 	}
 
 	// You can write your new methods here.
