@@ -69,6 +69,32 @@ public class myDBApp {
 		}
 		System.out.println("DEBUG: Updated " + affectedRows + " rows.");
 
+		// Exercise 5: Batch Statements
+		String SQL2 = "UPDATE account " + "SET balance = balance + ? " + "WHERE branch_name = ?";
+		int[] affectedRows2 = null;
+		try {
+			PreparedStatement pstmt = connection.prepareStatement(SQL2);
+			pstmt.setInt(1, 1000);
+			pstmt.setString(2, "Brighton");
+			pstmt.addBatch();
+
+			pstmt.setInt(1, 1000);
+			pstmt.setString(2, "Redwood");
+			pstmt.addBatch();
+
+			pstmt.setInt(1, 1000);
+			pstmt.setString(2, "Downtown");
+			pstmt.addBatch();
+
+			affectedRows2 = pstmt.executeBatch();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("DEBUG: Updated " + Arrays.toString(affectedRows2) + " rows.");
+
+		executeQuery(connection, "DELETE FROM customer");
+		// Using prepared statements and batching, re-write your solution to exercise 3 in a new function
+		insertIntoTablePrepared(connection, "customer", "customers.txt");
 	}
 
 	// You can write your new methods here.
@@ -130,6 +156,32 @@ public class myDBApp {
 				// Finally, execute the entire composed line.
 				numRows += st.executeUpdate(composedLine);
 			}
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return numRows;
+	}
+
+	// Exercise 5: Batch Statements
+	public static int[] insertIntoTablePrepared(Connection connection, String table, String filename) {
+		int[] numRows = null;
+		String currentLine = null;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(filename));
+			String SQL = "INSERT INTO " + table + " VALUES ( ? , ? , ? )";
+			PreparedStatement pstmt = connection.prepareStatement(SQL);
+			// Read in each line of the file until we reach the end.
+			while ((currentLine = br.readLine()) != null) {
+				String[] values = currentLine.split(",");
+				for (int i = 0; i < values.length; i++) {
+					pstmt.setString(i + 1, values[i]);
+				}
+				// Finally, execute the entire composed line.
+				pstmt.addBatch();
+			}
+			numRows = pstmt.executeBatch();
+			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
