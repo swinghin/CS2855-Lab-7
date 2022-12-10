@@ -1,0 +1,12 @@
+Adams,Spring,Pittsfield
+Brooks,Senator,Brooklyn
+Curry,North,null
+Glenn,Sand Hill,Woodside
+Johnson,Alma,Paolo Alto
+Green,Walnut,Stamford
+Hays,Main,Harrison
+Jones,Main,Harrison
+Lindsay,Park,Pittsfield
+Smith,North,Rye
+Turner,Putnam,Stamford
+Williams,Nassau,Princenton

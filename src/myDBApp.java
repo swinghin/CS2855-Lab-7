@@ -53,9 +53,13 @@ public class myDBApp {
 				"customer (customer_name varchar(15), customer_street varchar(15), customer_city varchar(15), primary key (customer_name));");
 		exercise2 = executeQuery(connection, query);
 
+		// Exercise 3: Inserting Values into a Table from a File
+		System.out.println(insertIntoTableFromFile(connection, "customer", "customers.txt"));
 	}
 
 	// You can write your new methods here.
+
+	// Exercise 1: Querying the Database
 	public static ResultSet executeQuery(Connection connection, String query) {
 		System.out.println("DEBUG: Executing query...");
 		try {
@@ -68,6 +72,7 @@ public class myDBApp {
 		}
 	}
 
+	// Exercise 2: Creating and Dropping Tables
 	public static void dropTable(Connection connection, String table) {
 		System.out.println("DEBUG: Dropping table...");
 		try {
@@ -89,6 +94,32 @@ public class myDBApp {
 			e.printStackTrace();
 		}
 
+	}
+
+	// Exercise 3: Inserting Values into a Table from a File
+	public static int insertIntoTableFromFile(Connection connection, String table, String filename) {
+		int numRows = 0;
+		String currentLine = null;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(filename));
+			Statement st = connection.createStatement();
+			// Read in each line of the file until we reach the end.
+			while ((currentLine = br.readLine()) != null) {
+				String[] values = currentLine.split(",");
+				String composedLine = "INSERT INTO " + table + " VALUES (";
+				for (int i = 0; i < values.length; i++) {
+					composedLine += "'" + values[i] + "'";
+					if ((values.length - i) > 1)
+						composedLine += ",";
+				}
+				composedLine += ");";
+				// Finally, execute the entire composed line.
+				numRows += st.executeUpdate(composedLine);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return numRows;
 	}
 
 	// ADVANCED: This method is for advanced users only. You should not need to
